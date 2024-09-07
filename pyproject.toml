@@ -1,0 +1,61 @@
+[project]
+name = "efb-qq-plugin-napcat"
+description = "EQS plugin for NapCat Client."
+authors = [{ name = "shejialuo", email = "shejialuo@gmail.com" }]
+dependencies = [
+    "efb-qq-slave @ git+https://github.com/milkice233/efb-qq-slave@master",
+    "ehforwarderbot>=2.1.1",
+    "httpx>=0.27.0",
+    "pyyaml>=6.0.2",
+    "aiocqhttp>=1.4.4"
+]
+requires-python = ">=3.10"
+license = { text = "AGPL-3.0-only" }
+readme ="README.md"
+keywords = [
+    "ehforwarderbot",
+    "EH Forwarder Bot",
+    "EH Forwarder Bot Slave Channel",
+    "qq",
+    "chatbot",
+    "EQS",
+    "onebot",
+    "napcat",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Communications :: Chat",
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dynamic = ["version"]
+
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
+[project.urls]
+homepage = "https://github.com/shejialuo/efb-qq-plugin-napcat"
+
+[project.entry-points."ehforwarderbot.qq.plugin"]
+NapCat = "efb_qq_plugin_napcat:NapCat"
+
+[tool.pdm]
+version = { from = "efb_qq_plugin_napcat/__init__.py" }
+
+[tool.pdm.dev-dependencies]
+dev = ["efb-telegram-master~=2.2.4"]
+
+[tool.black]
+line-length = 90
+
+[tool.isort]
+profile = "black"
+atomic = true
+filter_files = true
