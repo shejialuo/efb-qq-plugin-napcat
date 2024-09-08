@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import threading
-from typing import Any, Dict, override
+from typing import Any, Dict
 
 from efb_qq_slave import BaseClient, QQMessengerChannel
 from ehforwarderbot import Message, Status
@@ -27,43 +27,33 @@ class NapCat(BaseClient):
         self.event_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.event_loop)
 
-    @override
     def login(self) -> None:
         raise NotImplementedError
 
-    @override
     def logout(self) -> None:
         raise NotImplementedError
 
-    @override
     def relogin(self) -> None:
         raise NotImplementedError
 
-    @override
     def send_message(self, msg: Message) -> Message:
         raise NotImplementedError
 
-    @override
     def send_status(self, status: Status) -> None:
         raise NotImplementedError
 
-    @override
     def receive_message(self) -> None:
         raise NotImplementedError
 
-    @override
     def get_friends(self) -> None:
         raise NotImplementedError
 
-    @override
     def get_groups(self) -> None:
         raise NotImplementedError
 
-    @override
     def get_login_info(self) -> dict[Any, Any]:
         raise NotImplementedError
 
-    @override
     def poll(self) -> None:
         """
         EFB will create a thread for each slave instance to call this method to start
@@ -78,7 +68,6 @@ class NapCat(BaseClient):
         self.t.daemon = True
         self.t.start()
 
-    @override
     def stop_polling(self) -> None:
         """
         EFB will call this method to stop the slave instance. However, we cannot simply
