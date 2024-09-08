@@ -1,0 +1,37 @@
+name: sanity test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04, ubuntu-latest]
+        python-version: ["pypy3.10", "3.10", "3.11", "3.12"]
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build and install package
+        run: |
+          pip install .
+          pip install .[tests]
+
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Run tests
+        run: |
+          pytest
