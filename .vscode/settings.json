@@ -15,6 +15,9 @@
   "python.analysis.autoImportCompletions": true,
   "python.analysis.inlayHints.pytestParameters": true,
   "python.analysis.inlayHints.variableTypes": true,
+  "python.analysis.ignore": [
+    "**/tests/**",
+  ],
   "python.testing.pytestArgs": [
     "efb_qq_plugin_napcat"
   ],
