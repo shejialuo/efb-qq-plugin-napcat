@@ -46,6 +46,12 @@ homepage = "https://github.com/shejialuo/efb-qq-plugin-napcat"
 [project.entry-points."ehforwarderbot.qq.plugin"]
 NapCat = "efb_qq_plugin_napcat:NapCat"
 
+[project.optional-dependencies]
+tests = [
+    "pytest >= 8.3.2",
+    "pytest-httpserver",
+]
+
 [tool.pdm]
 version = { from = "efb_qq_plugin_napcat/__init__.py" }
 
