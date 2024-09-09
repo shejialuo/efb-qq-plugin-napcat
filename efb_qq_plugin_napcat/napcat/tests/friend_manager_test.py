@@ -130,7 +130,7 @@ class TestGetFriendRemark:
         result = asyncio.run(friend_manager.get_friend_remark(1))
         assert result == "Alice"
 
-    def test_sanity_friend_remark(self, friend_manager: NapCatFriendManager, httpserver):
+    def test_none_friend_remark(self, friend_manager: NapCatFriendManager, httpserver):
         httpserver.expect_request(
             "/get_friend_list",
             method="POST",
@@ -147,3 +147,21 @@ class TestGetFriendRemark:
 
         result = asyncio.run(friend_manager.get_friend_remark(3))
         assert result is None
+
+    def test_empty_friend_remark(self, friend_manager: NapCatFriendManager, httpserver):
+        httpserver.expect_request(
+            "/get_friend_list",
+            method="POST",
+            json={"no_cache": True},
+        ).respond_with_json(
+            {
+                "status": "ok",
+                "retcode": 0,
+                "data": [
+                    {"user_id": 1, "nickname": "Alice", "remark": ""},
+                ],
+            }
+        )
+
+        result = asyncio.run(friend_manager.get_friend_remark(1))
+        assert result == "Alice"

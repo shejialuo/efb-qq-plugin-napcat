@@ -58,9 +58,16 @@ class NapCatFriendManager:
         res = await self._napcat_bot.call_action("get_friend_list", **request)
         return res
 
-    def _populate_uid_to_friend_mapping(self) -> None:
+    def _update_friend_list_callback(self, qq_friends: _GetFriendListResponse) -> None:
         """
-        Populate the mapping from the user id to the friend instance.
+        When successfully updating the friend list, we will update the
+        `_friend_list` and `_uid_to_friend` attributes. Because the
+        `response` may contain many unused fields. It's not suitable just
+        assign the `response` to the `_friend_list` attribute. Because
+        Python is a dynamic language, it will cost a lot of memory to
+        store the unused fields. So we will only store the fields we need.
+
+        Then we populate the mapping from the user id to the friend instance.
         We will never clear the mapping. We will only update the mapping
         when we update the friend list.
 
@@ -71,10 +78,22 @@ class NapCatFriendManager:
         this so called friend anymore. :)
         """
 
-        for friend in self._friend_list:
-            if friend["remark"] == "":
-                friend["remark"] = friend["nickname"]
-            self._uid_to_friend[friend["user_id"]] = friend
+        self._friend_list.clear()
+
+        for qq_friend in qq_friends:
+
+            new_friend = Friend(
+                user_id=qq_friend["user_id"],
+                nickname=qq_friend["nickname"],
+                remark=(
+                    qq_friend["remark"]
+                    if qq_friend["remark"] != ""
+                    else qq_friend["nickname"]
+                ),
+            )
+
+            self._friend_list.append(new_friend)
+            self._uid_to_friend[new_friend["user_id"]] = new_friend
 
     async def update_friend_list(self, no_cache: bool = True) -> None:
         """
@@ -84,12 +103,12 @@ class NapCatFriendManager:
         """
 
         request: _GetFriendListRequest = {"no_cache": no_cache}
-        res = await self._get_friend_list(request)
+        qq_friends = await self._get_friend_list(request)
 
-        if res:
+        if qq_friends:
             self._logger.debug("Updated friend list")
-            self._friend_list = res
-            self._populate_uid_to_friend_mapping()
+
+            self._update_friend_list_callback(qq_friends)
         else:
             self._logger.warning("Failed to update the friend list")
 
